@@ -15,7 +15,7 @@
 	</resultMap>
 
 
-	<select id="idCheck" parameterType="String" resultType="int">
+	<select id="IdDuplicateCheck" parameterType="String" resultType="int">
 		select
 		count(user_id)
 		from user

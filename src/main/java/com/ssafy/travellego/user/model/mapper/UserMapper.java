@@ -19,4 +19,5 @@ public interface UserMapper {
 	void saveRefreshToken(Map<String, String> map);
 	Object getRefreshToken(String userId);
 	void deleteRefreshToken(Map<String, String> map);
+	int IdDuplicateCheck(String userId);
 }
