@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.ssafy.travellego.board.tripPlanBoard.model.mapper.TripPlanBoardMapper">
+	<resultMap type="tripPlanBoardDto" id="article">
+		<result column="trip_plan_article_no" property="articleNo" />
+		<result column="trip_plan_user_id" property="userId" />
+		<result column="trip_plan_subject" property="subject" />
+		<result column="trip_plan_content" property="content" />
+		<result column="trip_plan_hit" property="hit" />
+		<result column="trip_plan_register_time"
+			property="registerTime" />
+	</resultMap>
+
+	<resultMap type="tripPlanDto" id="plan">
+		<result column="trip_plan_article_no"
+			property="tripPlanArticleNo" />
+		<result column="attraction_content_id"
+			property="attractionContentId" />
+		<result column="trip_plan_order" property="tripPlanOrder" />
+	</resultMap>
+
+	<resultMap type="favoriteDto" id="favorite">
+		<result column="trip_plan_article_no" property="articleNo" />
+		<result column="user_id" property="userId" />
+	</resultMap>
+
+	<insert id="writeArticle" parameterType="tripPlanBoardDto">
+		insert into
+		trip_plan_board (trip_plan_article_no, trip_plan_user_id,
+		trip_plan_subject,
+		trip_plan_content )
+		values
+		(#{articleNo}, #{userId}
+		,#{subject}, #{content})
+	</insert>
+
+	<insert id="writePlan" parameterType="tripPlanDto">
+		insert into
+		trip_plan
+		(trip_plan_article_no, attraction_content_id, trip_plan_order)
+		values
+		(#{tripPlanArticleNo} ,#{attractionContentId}, #{tripPlanOrder})
+	</insert>
+
+	<select id="getArticleNo" resultType="int">
+		select
+		Max(trip_plan_article_no)+1 from
+		trip_plan_board;
+	</select>
+
+	<sql id="search">
+		<if test="word != null and word != ''">
+			<if test="key == 'subject'">
+				where trip_plan_subject like concat('%', #{word}, '%')
+			</if>
+			<if test="key != 'subject'">
+				where ${key} = #{word}
+			</if>
+		</if>
+	</sql>
+
+	<select id="listArticle" parameterType="map" resultMap="article">
+
+		select trip_plan_article_no, trip_plan_user_id, trip_plan_subject,
+		trip_plan_content, trip_plan_hit, trip_plan_register_time
+		from
+		trip_plan_board
+		<include refid="search"></include>
+		order by trip_plan_article_no desc
+	</select>
+
+	<select id="getTotalArticleCount" parameterType="map"
+		resultType="int">
+		select count(trip_plan_article_no)
+		from trip_plan_board
+		<where>
+			<include refid="search"></include>
+		</where>
+	</select>
+
+	<select id="getArticle" parameterType="int" resultMap="article">
+		select
+		trip_plan_article_no, trip_plan_user_id, trip_plan_subject,
+		trip_plan_content,
+		trip_plan_hit, trip_plan_register_time
+		from
+		trip_plan_board
+		where
+		trip_plan_article_no = #{articleNo}
+	</select>
+
+
+	<update id="updateHit" parameterType="int">
+		update trip_plan_board
+		set
+		trip_plan_hit = trip_plan_hit +
+		1
+		where trip_plan_article_no =
+		#{articleNo}
+	</update>
+
+	<update id="modifyArticle" parameterType="tripPlanBoardDto">
+		update trip_plan_board
+		set trip_plan_subject
+		= #{subject}, trip_plan_content = #{content}
+		where
+		trip_plan_article_no = #{articleNo}
+	</update>
+
+	<delete id="deleteArticle" parameterType="int">
+		delete from
+		trip_plan_board
+		where
+		trip_plan_article_no = #{articleNo}
+	</delete>
+
+	<select id="getPlan" parameterType="int" resultType="int">
+		select
+		attraction_content_id from trip_plan where trip_plan_article_no =
+		#{articleNo} order by trip_plan_order;
+	</select>
+
+	<delete id="deleteAllPlan" parameterType="int">
+		delete from
+		trip_plan
+		where
+		trip_plan_article_no = #{articleNo}
+	</delete>
+
+	<insert id="addFavorite" parameterType="favoriteDto">
+		insert into
+		trip_plan_favorite
+		(trip_plan_article_no, user_id)
+		values
+		(#{articleNo}
+		,#{userId})
+	</insert>
+
+	<delete id="cancelFavorite" parameterType="favoriteDto">
+		delete from
+		trip_plan_favorite
+		where
+		trip_plan_article_no = #{articleNo} and
+		user_id
+		= #{userId}
+	</delete>
+
+	<select id="getFavorite" parameterType="favoriteDto"
+		resultType="int">
+		select count(*)
+		from trip_plan_favorite
+		where
+		trip_plan_article_no = #{articleNo} and
+		user_id = #{userId};
+	</select>
+	
+	<select id="getFavoriteCount" parameterType="int"
+		resultType="int">
+		select count(*)
+		from trip_plan_favorite
+		where
+		trip_plan_article_no = #{articleNo}
+	</select>
+</mapper>
