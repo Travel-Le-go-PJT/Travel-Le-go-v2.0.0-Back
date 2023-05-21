@@ -156,5 +156,12 @@
 		trip_plan_article_no = #{articleNo} and
 		user_id = #{userId};
 	</select>
-
+	
+	<select id="getFavoriteCount" parameterType="int"
+		resultType="int">
+		select count(*)
+		from trip_plan_favorite
+		where
+		trip_plan_article_no = #{articleNo}
+	</select>
 </mapper>

@@ -153,6 +153,7 @@ public class TripPlanBoardController {
 	
 	@GetMapping(value = "/favorite")
 	public ResponseEntity<?> getFavorite(@RequestParam int articleNo, @RequestParam String userId){
+		logger.debug("Favorite :{}", "Asd");
 		try {
 			FavoriteDto dto = new FavoriteDto(articleNo, userId);
 			Boolean result  = tripPlanBoardService.getFavorite(dto);
@@ -160,6 +161,22 @@ public class TripPlanBoardController {
 			if(result) {
 				resultMessage.setResultSuccess();
 				return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
+	@GetMapping(value = "/favorite/{articleNo}")
+	public ResponseEntity<?> getFavorite(@PathVariable int articleNo){
+		try {
+			int count  = tripPlanBoardService.getFavoriteCount(articleNo);
+			logger.debug("Favorite cnt:{}", count);
+			if(count >= 0) {
+				resultMessage.setResultSuccess();
+				return new ResponseEntity<Integer>(count, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 			}
@@ -186,11 +203,11 @@ public class TripPlanBoardController {
 	}
 
 	@DeleteMapping(value = "/favorite")
-	public ResponseEntity<?> cancelFavorite(@RequestBody FavoriteDto dto){
-		logger.debug("cancel Favorite : {}", dto);
+	public ResponseEntity<?> cancelFavorite(@RequestParam int articleNo, @RequestParam String userId){
 		try {
-			
+			FavoriteDto dto = new FavoriteDto(articleNo, userId);
 			int result  = tripPlanBoardService.cancelFavorite(dto);
+			logger.debug("cancel Favorite : {}", dto);
 			if(result >= 1) {
 				resultMessage.setResultSuccess();
 				return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.OK);

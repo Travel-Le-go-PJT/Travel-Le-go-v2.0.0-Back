@@ -109,6 +109,11 @@ public class TripPlanBoardServiceImpl implements TripPlanBoardService {
 		}
 		return false;
 	}
+
+	@Override
+	public int getFavoriteCount(int articleNo) {
+		return planMapper.getFavoriteCount(articleNo);
+	}
 	
 
 }
