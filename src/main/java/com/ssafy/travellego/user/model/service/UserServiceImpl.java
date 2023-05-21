@@ -23,13 +23,17 @@ public class UserServiceImpl implements UserService {
 
 
 	@Override
-	public int idCheck(String userId) throws Exception {
-		return userMapper.idCheck(userId);
-	}
-
-	@Override
 	public boolean joinUser(UserDto userDto) throws Exception {
 		return userMapper.joinUser(userDto) == 1;
+	}
+	
+	@Override
+	public boolean IdDuplicateCheck(String userId) {
+		int cntresult = userMapper.IdDuplicateCheck(userId);
+		if(cntresult >= 1) {
+			return false;
+		}
+		return true;
 	}
 	
 	@Override
@@ -77,7 +81,5 @@ public class UserServiceImpl implements UserService {
 		map.put("token", null);
 		userMapper.deleteRefreshToken(map);
 	}
-
-
 
 }

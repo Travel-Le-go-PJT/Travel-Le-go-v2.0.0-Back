@@ -14,6 +14,11 @@ public class ResultMessage {
 	public String getResult() {
 		return result;
 	}
+	
+
+	public void setResult(String result) {
+		this.result = result;
+	}
 
 
 	public void setResultSuccess() {

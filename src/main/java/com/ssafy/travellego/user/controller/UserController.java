@@ -119,6 +119,7 @@ public class UserController extends HttpServlet {
 		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
+
 	@ApiOperation(value = "로그아웃", notes = "회원 정보를 담은 Token을 제거한다.", response = Map.class)
 	@GetMapping("/logout/{userId}")
 	public ResponseEntity<?> removeToken(@PathVariable("userId") String userId) {
@@ -127,7 +128,7 @@ public class UserController extends HttpServlet {
 		try {
 			userService.deleRefreshToken(userId);
 			resultMap.put("message", "SUCCESS");
-			status =HttpStatus.ACCEPTED;
+			status = HttpStatus.ACCEPTED;
 		} catch (Exception e) {
 			logger.error("로그아웃 실패 : {}", e);
 			resultMap.put("message", e.getMessage());
@@ -135,11 +136,10 @@ public class UserController extends HttpServlet {
 		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
-	
+
 	@ApiOperation(value = "Access Token 재발급", notes = "만료된 access token을 재발급받는다.", response = Map.class)
 	@PostMapping("/refresh")
-	public ResponseEntity<?> refreshToken(@RequestBody UserDto userDto, HttpServletRequest request)
-			throws Exception {
+	public ResponseEntity<?> refreshToken(@RequestBody UserDto userDto, HttpServletRequest request) throws Exception {
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
 		String token = request.getHeader("refresh-token");
@@ -159,23 +159,43 @@ public class UserController extends HttpServlet {
 		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
-	
+
 	@PostMapping("/join")
 	public ResponseEntity<?> join(@RequestBody UserDto dto) {
 		dto.setUserPwd(encService.getEncryptedPw(dto.getUserPwd()));
 		try {
-			if (userService.joinUser(dto)) {
-				resultMessage.setResultSuccess();
-				return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.OK);
-			} else {
-				resultMessage.setResultFail();
-				return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.NO_CONTENT);
+			if (userService.IdDuplicateCheck(dto.getUserId())) {
+				if (userService.joinUser(dto)) {
+					resultMessage.setResultSuccess();
+					return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.OK);
+				} else {
+					resultMessage.setResultFail();
+					return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.NO_CONTENT);
+				}
+			}else {
+					resultMessage.setResult("DUPLICATE");
+					return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.OK);
 			}
 
 			// session.setAttribute("msg", null);
 		} catch (Exception e) {
 			return exceptionHandling(e);
 			// session.setAttribute("msg", "회원가입 중 에러 발생!!!");
+		}
+	}
+	@GetMapping("/idcheck/{userId}")
+	public ResponseEntity<?> IdDuplicateCheck(@PathVariable("userId") String userId,
+			HttpServletRequest request) {
+		logger.debug("getInfo - userId : {} ", userId);
+		if (userService.IdDuplicateCheck(userId)) {
+
+			logger.debug("SUCCESS {} ", userId);
+			resultMessage.setResultSuccess();
+			return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.OK);
+		} else {
+			resultMessage.setResult("DUPLICATE");
+			logger.debug("DUPLICATE {} ", userId);
+			return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.OK);
 		}
 	}
 

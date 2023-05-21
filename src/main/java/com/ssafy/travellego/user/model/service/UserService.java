@@ -7,7 +7,6 @@ import com.ssafy.travellego.user.model.UserDto;
 
 public interface UserService {
 
-	int idCheck(String userId) throws Exception;
 	boolean joinUser(UserDto userDto) throws Exception;
 	//MemberDto loginMember(String userId, String userPwd) throws Exception;
 	UserDto login(UserDto userDto) throws Exception ;
@@ -18,4 +17,5 @@ public interface UserService {
 	void saveRefreshToken(String userId, String refreshToken) throws Exception;
 	Object getRefreshToken(String userId) throws Exception;
 	void deleRefreshToken(String userId) throws Exception;
+	boolean IdDuplicateCheck(String userId);
 }
