@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.travellego.attraction.model.mapper.AttractionMapper">
+	<resultMap type="AttractionDto" id="attraction">
+		<result column="content_id" property="contentId"/>
+		<result column="content_type_id" property="contentTypeId"/>
+		<result column="title" property="title"/>
+		<result column="addr1" property="addr1"/>
+		<result column="first_image" property="image"/>
+		<result column="overview" property="description"/>
+		<result column="sido_code" property="sidoCode"/>
+		<result column="gugun_code" property="gugunCode"/>
+		<result column="latitude" property="latitude"/>
+		<result column="longitude" property="longitude"/>
+	</resultMap>
+	<resultMap type="SidoDto" id="sido">
+		<result column="sido_code" property="sidoCode"/>
+		<result column="sido_name" property="sidoName"/>
+	</resultMap>
+	
+
+	<select id="getRandAttractionInfo" parameterType="int" resultMap="attraction">
+		select attraction_info.content_id, content_type_id, title, addr1, first_image, sido_code, gugun_code, latitude, longitude, overview 
+		from attraction_info left outer join attraction_description 
+		on attraction_info.content_id = attraction_description.content_id 
+		where first_image != "" order by rand() limit #{num}
+	</select>
+
+
+	<select id="attractionList" parameterType="AttractionDto" resultMap="attraction">
+		select i.content_id, title, addr1, first_image, overview,  latitude, longitude
+		from attraction_info i, attraction_description d
+		where i.content_id = d.content_id
+		and i.sido_code= #{sidoCode} AND i.content_type_id=#{contentTypeId} AND i.title like concat('%',#{title},'%')
+	</select>
+	
+	<select id="getSido"  resultMap="sido">
+		select sido_code, sido_name
+		from sido;
+	</select>
+	
+	<select id="getAttraction" parameterType="int" resultMap="attraction">
+		select i.content_id, title, addr1, first_image, overview, latitude, longitude
+		from attraction_info i, attraction_description d
+		where i.content_id = d.content_id
+		and i.content_id=#{contentId}
+	</select>
+	
+</mapper>
