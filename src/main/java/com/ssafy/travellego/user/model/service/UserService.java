@@ -11,11 +11,12 @@ public interface UserService {
 	//MemberDto loginMember(String userId, String userPwd) throws Exception;
 	UserDto login(UserDto userDto) throws Exception ;
 	List<UserDto> userList() throws Exception;
-	boolean delete(String userId) throws Exception;
     UserDto getUser(String userId) throws Exception;
     boolean modifyUser(UserDto userDto) throws Exception;
 	void saveRefreshToken(String userId, String refreshToken) throws Exception;
 	Object getRefreshToken(String userId) throws Exception;
 	void deleRefreshToken(String userId) throws Exception;
 	boolean IdDuplicateCheck(String userId);
+	void userWithdraw(String userId);
+	boolean checkUserWithdraw(String userId);
 }

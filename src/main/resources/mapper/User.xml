@@ -2,8 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper
-	namespace="com.ssafy.travellego.user.model.mapper.UserMapper">
+<mapper namespace="com.ssafy.travellego.user.model.mapper.UserMapper">
 	<resultMap type="userDto" id="user">
 		<result column="user_id" property="userId" />
 		<result column="user_name" property="userName" />
@@ -54,12 +53,6 @@
 
 	</update>
 
-	<delete id="deleteUser" parameterType="String">
-		delete from user
-		where user_id = #{userId}
-	</delete>
-
-
 	<select id="getRefreshToken" parameterType="string"
 		resultType="string">
 		select token
@@ -81,4 +74,49 @@
 		#{userId}
 	</update>
 
+
+	<update id="userWithdraw" parameterType="string">
+		update user
+		set user_role=0
+		where user_id = #{userId}
+	</update>
+
+	<delete id="deleteFavorite" parameterType="String">
+		delete from trip_plan_favorite
+		where user_id = #{userId}
+	</delete>
+	
+	<update id="changeFromInfoToNone" parameterType="string">
+		update trip_info_board
+		set trip_info_user_id="알수없음"
+		where trip_info_user_id = #{userId}
+	</update>
+	
+	<update id="changeFromPlanToNone" parameterType="string">
+		update trip_plan_board
+		set trip_plan_user_id="알수없음"
+		where trip_plan_user_id = #{userId}
+	</update>
+	
+	<select id="checkRole" parameterType="string"
+		resultType="int">
+		select user_role
+		from user
+		where user_id = #{userId}
+	</select>
+	
+	<select id="countInfoAricle" parameterType="String" resultType="int">
+		select
+		count(*)
+		from trip_info_board
+		where trip_info_user_id = #{userId}
+	</select>
+	
+	<select id="countPlanAricle" parameterType="String" resultType="int">
+		select
+		count(*)
+		from trip_plan_board
+		where trip_plan_user_id = #{userId}
+	</select>
+	
 </mapper>

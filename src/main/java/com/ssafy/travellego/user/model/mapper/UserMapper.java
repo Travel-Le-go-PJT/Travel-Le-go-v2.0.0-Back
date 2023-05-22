@@ -13,11 +13,17 @@ public interface UserMapper {
 	int joinUser(UserDto userDto) throws SQLException;
 	UserDto loginUser(UserDto userDto) throws SQLException;
 	List<UserDto> userList();
-	int deleteUser(String userId);
 	UserDto getUser(String userId);
 	int modifyUser(UserDto userDto);
 	void saveRefreshToken(Map<String, String> map);
 	Object getRefreshToken(String userId);
 	void deleteRefreshToken(Map<String, String> map);
 	int IdDuplicateCheck(String userId);
+	void userWithdraw(String userId);
+	void deleteFavorite(String userId);
+	void changeFromInfoToNone(String userId);
+	void changeFromPlanToNone(String userId);
+	int checkRole(String userId);
+	int countInfoAricle(String userId);
+	int countPlanAricle(String userId);
 }
