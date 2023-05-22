@@ -84,7 +84,11 @@ public class TripPlanBoardServiceImpl implements TripPlanBoardService {
 
 	@Override
 	public int getArticleNo() {
-		return planMapper.getArticleNo();
+		Integer val = planMapper.getArticleNo();
+		if(val == null) {
+			val = 1;
+		}
+		return val;
 	}
 
 	@Override

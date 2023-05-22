@@ -21,7 +21,7 @@ public interface TripPlanBoardMapper {
 	int modifyArticle(TripPlanBoardDto boardDto) throws SQLException;
 	int deleteArticle(int articleNo) throws SQLException;
 	void writePlan(TripPlanDto planDto);
-	int getArticleNo();
+	Integer getArticleNo();
 	int[] getPlan(int articleNo);
 	void deleteAllPlan(int articleNo);
 	int addFavorite(FavoriteDto dto);
