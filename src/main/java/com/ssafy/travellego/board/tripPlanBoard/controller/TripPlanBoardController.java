@@ -185,6 +185,21 @@ public class TripPlanBoardController {
 		}
 	}
 	
+	@GetMapping(value = "/favoriteArticles/{userId}")
+	public ResponseEntity<?> getFavorite(@PathVariable String userId){
+		try {
+			List<TripPlanBoardDto> list = tripPlanBoardService.getFavoriteArticles(userId);
+			if (list != null && !list.isEmpty()) {
+				
+				return new ResponseEntity<List<TripPlanBoardDto>>(list, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
 	@PostMapping(value = "/favorite")
 	public ResponseEntity<?> addFavorite(@RequestBody FavoriteDto dto){
 		logger.debug("add Favorite : {}", dto);

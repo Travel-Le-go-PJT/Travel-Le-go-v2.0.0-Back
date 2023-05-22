@@ -24,4 +24,5 @@ public interface TripPlanBoardService {
 	int cancelFavorite(FavoriteDto dto);
 	Boolean getFavorite(FavoriteDto dto);
 	int getFavoriteCount(int articleNo);
+	List<TripPlanBoardDto> getFavoriteArticles(String userId);
 }

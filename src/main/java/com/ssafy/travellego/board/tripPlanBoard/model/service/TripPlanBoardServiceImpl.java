@@ -118,6 +118,11 @@ public class TripPlanBoardServiceImpl implements TripPlanBoardService {
 	public int getFavoriteCount(int articleNo) {
 		return planMapper.getFavoriteCount(articleNo);
 	}
+
+	@Override
+	public List<TripPlanBoardDto> getFavoriteArticles(String userId) {
+		return planMapper.getFavoriteArticles(userId);
+	}
 	
 
 }
