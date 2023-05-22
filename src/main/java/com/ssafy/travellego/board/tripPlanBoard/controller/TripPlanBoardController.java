@@ -49,7 +49,7 @@ public class TripPlanBoardController {
 			@ApiResponse(code = 500, message = "서버에러!!") })
 	@GetMapping(value = "/")
 	public ResponseEntity<?> list(SearchDto searchdto) throws Exception {
-		logger.info("Welcome Hot Place Board List! ");
+		logger.debug("Welcome Hot Place Board List!:{} ", searchdto);
 		try {
 			List<TripPlanBoardDto> list = tripPlanBoardService.listArticle(searchdto);
 			if (list != null && !list.isEmpty()) {
