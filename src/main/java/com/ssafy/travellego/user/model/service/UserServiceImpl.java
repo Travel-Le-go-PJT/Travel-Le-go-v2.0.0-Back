@@ -24,6 +24,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean joinUser(UserDto userDto) throws Exception {
+		// TODO 삭제한 회원중 같은 아이디를 가진 계정이 있는지 확인
+		//있다면 덮어쓰기 update
+		//없다면 추가 insert
 		return userMapper.joinUser(userDto) == 1;
 	}
 	
@@ -45,12 +48,6 @@ public class UserServiceImpl implements UserService {
 	public List<UserDto> userList() throws Exception {
 		return userMapper.userList();
 	}
-
-	@Override
-	public boolean delete(String userId) {
-		return userMapper.deleteUser(userId) >= 1;
-	}
-
 	@Override
 	public UserDto getUser(String userId) {
 		return userMapper.getUser(userId);
@@ -80,6 +77,30 @@ public class UserServiceImpl implements UserService {
 		map.put("userId", userId);
 		map.put("token", null);
 		userMapper.deleteRefreshToken(map);
+	}
+
+
+	@Override
+	public void userWithdraw(String userId) {
+		// 탈퇴한 회원으로 상태 변경 user_Role = 0 으로 변경
+		userMapper.userWithdraw(userId);
+		
+		//탈퇴한 회원이 누른 좋아요 삭제
+		userMapper.deleteFavorite(userId);
+		
+		// 탈퇴한 회원이 작성한 글들의 작성자를 none 으로 변경
+		
+		userMapper.changeFromInfoToNone(userId);
+		userMapper.changeFromPlanToNone(userId);
+	}
+
+
+	@Override
+	public boolean checkUserWithdraw(String userId) {
+		if(userMapper.checkRole(userId) == 0 && userMapper.countInfoAricle(userId) == 0&&userMapper.countPlanAricle(userId)==0) {
+			return true;
+		}
+		return false;
 	}
 
 }

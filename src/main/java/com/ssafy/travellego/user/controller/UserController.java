@@ -164,7 +164,7 @@ public class UserController extends HttpServlet {
 	public ResponseEntity<?> join(@RequestBody UserDto dto) {
 		dto.setUserPwd(encService.getEncryptedPw(dto.getUserPwd()));
 		try {
-			if (userService.IdDuplicateCheck(dto.getUserId())) {
+			if (!dto.getUserId().equals("none") &&  userService.IdDuplicateCheck(dto.getUserId())) {
 				if (userService.joinUser(dto)) {
 					resultMessage.setResultSuccess();
 					return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.OK);
@@ -187,8 +187,7 @@ public class UserController extends HttpServlet {
 	public ResponseEntity<?> IdDuplicateCheck(@PathVariable("userId") String userId,
 			HttpServletRequest request) {
 		logger.debug("getInfo - userId : {} ", userId);
-		if (userService.IdDuplicateCheck(userId)) {
-
+		if (!userId.equals("none") && userService.IdDuplicateCheck(userId)) {
 			logger.debug("SUCCESS {} ", userId);
 			resultMessage.setResultSuccess();
 			return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.OK);
@@ -242,10 +241,13 @@ public class UserController extends HttpServlet {
 		}
 	}
 
-	@DeleteMapping("/{userId}")
-	public ResponseEntity<?> manageMem(@PathVariable String userId) {
+	@PutMapping("/{userId}")
+	public ResponseEntity<?> userWithdraw(@PathVariable String userId) {
 		try {
-			if (userService.delete(userId)) {
+			userService.userWithdraw(userId);
+			//TODO 알맞은 조건 써서 제대로 탈퇴상태로 바꼈는지 확인
+			// user role 이 0인지 확인 , 글중에 그 userid 가 있는지 확인
+			if (userService.checkUserWithdraw(userId)) {
 				resultMessage.setResultSuccess();
 				return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.OK);
 			} else {
@@ -256,6 +258,7 @@ public class UserController extends HttpServlet {
 			return exceptionHandling(e);
 		}
 	}
+	
 
 	private ResponseEntity<String> exceptionHandling(Exception e) {
 		e.printStackTrace();
