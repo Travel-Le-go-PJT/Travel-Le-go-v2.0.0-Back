@@ -63,7 +63,7 @@ public class UserController extends HttpServlet {
 
 		try {
 			UserDto login = userService.login(dto);
-			if (login != null) {
+			if (login != null && login.getuserRole() != 0 ) {
 				// access, refresh token 발급
 				String accessToken = jwtService.createAccessToken("userId", login.getUserId());
 				String refreshToken = jwtService.createRefreshToken("userId", login.getUserId());
