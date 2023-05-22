@@ -45,7 +45,7 @@
 		(#{tripPlanArticleNo} ,#{attractionContentId}, #{tripPlanOrder})
 	</insert>
 
-	<select id="getArticleNo" resultType="int">
+	<select id="getArticleNo" resultType="Integer">
 		select
 		Max(trip_plan_article_no)+1 from
 		trip_plan_board;
