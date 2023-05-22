@@ -164,4 +164,14 @@
 		where
 		trip_plan_article_no = #{articleNo}
 	</select>
+	
+	<select id="getFavoriteArticles" parameterType="String" resultMap="article">
+
+		select b.trip_plan_article_no, trip_plan_user_id, trip_plan_subject,
+		trip_plan_content, trip_plan_hit, trip_plan_register_time
+		from trip_plan_board b, trip_plan_favorite f
+		where f.user_id = #{userId} and
+		b.trip_plan_article_no = f.trip_plan_article_no
+		order by trip_plan_article_no desc
+	</select>
 </mapper>
