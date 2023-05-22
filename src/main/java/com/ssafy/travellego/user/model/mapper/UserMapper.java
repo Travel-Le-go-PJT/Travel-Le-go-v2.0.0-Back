@@ -18,7 +18,7 @@ public interface UserMapper {
 	void saveRefreshToken(Map<String, String> map);
 	Object getRefreshToken(String userId);
 	void deleteRefreshToken(Map<String, String> map);
-	int IdDuplicateCheck(String userId);
+	int iSDuplicate(String userId);
 	void userWithdraw(String userId);
 	void deleteFavorite(String userId);
 	void changeFromInfoToNone(String userId);
@@ -26,4 +26,5 @@ public interface UserMapper {
 	int checkRole(String userId);
 	int countInfoAricle(String userId);
 	int countPlanAricle(String userId);
+	int updateJoinUser(UserDto userDto);
 }

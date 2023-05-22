@@ -16,7 +16,8 @@ public interface UserService {
 	void saveRefreshToken(String userId, String refreshToken) throws Exception;
 	Object getRefreshToken(String userId) throws Exception;
 	void deleRefreshToken(String userId) throws Exception;
-	boolean IdDuplicateCheck(String userId);
+	boolean iSDuplicate(String userId);
 	void userWithdraw(String userId);
 	boolean checkUserWithdraw(String userId);
+	boolean updateJoinUser(UserDto dto);
 }

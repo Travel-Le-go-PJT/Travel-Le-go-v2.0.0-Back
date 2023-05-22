@@ -63,7 +63,7 @@ public class UserController extends HttpServlet {
 
 		try {
 			UserDto login = userService.login(dto);
-			if (login != null) {
+			if (login != null && login.getuserRole() != 0) {
 				// access, refresh token 발급
 				String accessToken = jwtService.createAccessToken("userId", login.getUserId());
 				String refreshToken = jwtService.createRefreshToken("userId", login.getUserId());
@@ -164,17 +164,33 @@ public class UserController extends HttpServlet {
 	public ResponseEntity<?> join(@RequestBody UserDto dto) {
 		dto.setUserPwd(encService.getEncryptedPw(dto.getUserPwd()));
 		try {
-			if (!dto.getUserId().equals("none") &&  userService.IdDuplicateCheck(dto.getUserId())) {
-				if (userService.joinUser(dto)) {
-					resultMessage.setResultSuccess();
-					return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.OK);
-				} else {
-					resultMessage.setResultFail();
-					return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.NO_CONTENT);
+			if (!dto.getUserId().equals("알수없음")) {  // 사용자가 아이디를 "알수 없음"외의 아이디를  입력한 경우
+				if (!userService.iSDuplicate(dto.getUserId())) { // 사용자가 중복된 아이디를 입력하지 않은 경우
+					if (userService.joinUser(dto)) { //회원가입이 성공한 경우
+						resultMessage.setResultSuccess();
+						return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.OK);
+					} else {  // 회원가입이 실패된 경우
+						resultMessage.setResultFail();
+						return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.NO_CONTENT);
+					}
+				}else { //사용자가 중복된 아이디를 입력한 경우 
+					if(userService.getUser(dto.getUserId()).getuserRole() == 0) { //그 아이디의 계정 상태가 유효한계정인지 탈퇴한 계정인지 판별
+						if(userService.updateJoinUser(dto)) {//회원가입이 성공한 경우
+							resultMessage.setResultSuccess();
+							return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.OK);
+						} else {  // 회원가입이 실패된 경우
+							resultMessage.setResultFail();
+							return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.NO_CONTENT);
+						}
+					}
+					else{
+						resultMessage.setResult("DUPLICATE");
+						return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.OK);
+					}
 				}
-			}else {
-					resultMessage.setResult("DUPLICATE");
-					return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.OK);
+			} else {
+				resultMessage.setResult("알수없음 DUPLICATE");
+				return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.OK);
 			}
 
 			// session.setAttribute("msg", null);
@@ -183,15 +199,19 @@ public class UserController extends HttpServlet {
 			// session.setAttribute("msg", "회원가입 중 에러 발생!!!");
 		}
 	}
+
 	@GetMapping("/idcheck/{userId}")
-	public ResponseEntity<?> IdDuplicateCheck(@PathVariable("userId") String userId,
-			HttpServletRequest request) {
+	public ResponseEntity<?> iSDuplicate(@PathVariable("userId") String userId, HttpServletRequest request) throws Exception {
 		logger.debug("getInfo - userId : {} ", userId);
-		if (!userId.equals("none") && userService.IdDuplicateCheck(userId)) {
+		if (!userId.equals("알수없음") && !userService.iSDuplicate(userId)) {
 			logger.debug("SUCCESS {} ", userId);
 			resultMessage.setResultSuccess();
 			return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.OK);
 		} else {
+			if(userService.getUser(userId).getuserRole() == 0) { //그 아이디의 계정 상태가 유효한계정인지 탈퇴한 계정인지 판별
+				resultMessage.setResultSuccess();
+				return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.OK);
+			}
 			resultMessage.setResult("DUPLICATE");
 			logger.debug("DUPLICATE {} ", userId);
 			return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.OK);
@@ -245,7 +265,7 @@ public class UserController extends HttpServlet {
 	public ResponseEntity<?> userWithdraw(@PathVariable String userId) {
 		try {
 			userService.userWithdraw(userId);
-			//TODO 알맞은 조건 써서 제대로 탈퇴상태로 바꼈는지 확인
+			// TODO 알맞은 조건 써서 제대로 탈퇴상태로 바꼈는지 확인
 			// user role 이 0인지 확인 , 글중에 그 userid 가 있는지 확인
 			if (userService.checkUserWithdraw(userId)) {
 				resultMessage.setResultSuccess();
@@ -258,7 +278,6 @@ public class UserController extends HttpServlet {
 			return exceptionHandling(e);
 		}
 	}
-	
 
 	private ResponseEntity<String> exceptionHandling(Exception e) {
 		e.printStackTrace();
