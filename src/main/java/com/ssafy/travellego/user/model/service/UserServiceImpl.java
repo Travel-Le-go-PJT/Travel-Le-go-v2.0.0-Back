@@ -31,12 +31,18 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public boolean IdDuplicateCheck(String userId) {
-		int cntresult = userMapper.IdDuplicateCheck(userId);
+	public boolean updateJoinUser(UserDto userDto) {
+		return userMapper.updateJoinUser(userDto) == 1;
+	}
+	
+	
+	@Override
+	public boolean iSDuplicate(String userId) {
+		int cntresult = userMapper.iSDuplicate(userId);
 		if(cntresult >= 1) {
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 	
 	@Override
@@ -102,5 +108,8 @@ public class UserServiceImpl implements UserService {
 		}
 		return false;
 	}
+
+
+	
 
 }

@@ -14,7 +14,7 @@
 	</resultMap>
 
 
-	<select id="IdDuplicateCheck" parameterType="String" resultType="int">
+	<select id="iSDuplicate" parameterType="String" resultType="int">
 		select
 		count(user_id)
 		from user
@@ -28,6 +28,13 @@
 		values (#{userName}, #{userId}, #{userPwd}, #{emailId},
 		#{emailDomain}, now(), 1)
 	</insert>
+	
+	<update id="updateJoinUser" parameterType="userDto">
+		update user
+		set user_name = #{userName}, user_password = #{userPwd},email_id=#{emailId},email_domain=#{emailDomain},join_date = now(), user_role=1
+        where user_id = #{userId}
+	</update>
+	
 
 	<select id="loginUser" parameterType="userDto"
 		resultMap="user">
