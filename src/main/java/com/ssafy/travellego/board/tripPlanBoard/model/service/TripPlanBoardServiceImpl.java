@@ -37,6 +37,8 @@ public class TripPlanBoardServiceImpl implements TripPlanBoardService {
 	public List<TripPlanBoardDto> listArticle(SearchDto searchdto) throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
 		String key = searchdto.getKey();
+		logger.info("{}",key);
+		
 		param.put("key", key == null ? "" : key);
 		param.put("word", searchdto.getWord() == null ? "" : searchdto.getWord());
 		return planMapper.listArticle(param);
