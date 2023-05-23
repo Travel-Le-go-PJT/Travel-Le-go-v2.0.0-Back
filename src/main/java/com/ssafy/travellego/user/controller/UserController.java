@@ -60,7 +60,6 @@ public class UserController extends HttpServlet {
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = null;
 		dto.setUserPwd(encService.getEncryptedPw(dto.getUserPwd()));
-
 		try {
 			UserDto login = userService.login(dto);
 			if (login != null && login.getuserRole() != 0) {
@@ -120,6 +119,28 @@ public class UserController extends HttpServlet {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
+
+	@PutMapping
+	public ResponseEntity<?> modifyUser(@RequestBody UserDto dto) {
+		Map<String, Object> resultMap = new HashMap<>();
+		dto.setUserPwd(encService.getEncryptedPw(dto.getUserPwd()));
+		HttpStatus status = HttpStatus.UNAUTHORIZED;
+		try {
+			if (userService.modifyUser(dto)) {
+				UserDto userDto = userService.getUser(dto.getUserId());
+				resultMap.put("userInfo", userDto);
+				resultMap.put("message", "SUCCESS");
+				status = HttpStatus.ACCEPTED;
+			} else {
+				resultMap.put("message", "FAIL");
+				status = HttpStatus.UNAUTHORIZED;
+			}
+			return new ResponseEntity<Map<String, Object>>(resultMap, status);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+
 	@ApiOperation(value = "로그아웃", notes = "회원 정보를 담은 Token을 제거한다.", response = Map.class)
 	@GetMapping("/logout/{userId}")
 	public ResponseEntity<?> removeToken(@PathVariable("userId") String userId) {
@@ -175,7 +196,7 @@ public class UserController extends HttpServlet {
 					}
 				}else { //사용자가 중복된 아이디를 입력한 경우 
 					if(userService.getUser(dto.getUserId()).getuserRole() == 0) { //그 아이디의 계정 상태가 유효한계정인지 탈퇴한 계정인지 판별
-						if(userService.updateJoinUser(dto)) {//회원가입이 성공한 경우
+						if(userService.modifyUser(dto)) {//회원가입이 성공한 경우
 							resultMessage.setResultSuccess();
 							return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.OK);
 						} else {  // 회원가입이 실패된 경우
@@ -218,6 +239,23 @@ public class UserController extends HttpServlet {
 		}
 	}
 
+	@PutMapping("/{userId}")
+	public ResponseEntity<?> userWithdraw(@PathVariable String userId) {
+		try {
+			userService.userWithdraw(userId);
+			// TODO 알맞은 조건 써서 제대로 탈퇴상태로 바꼈는지 확인
+			// user role 이 0인지 확인 , 글중에 그 userid 가 있는지 확인
+			if (userService.checkUserWithdraw(userId)) {
+				resultMessage.setResultSuccess();
+				return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.OK);
+			} else {
+				resultMessage.setResultFail();
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
 	@GetMapping
 	public ResponseEntity<?> manageMem() {
 		try {
@@ -246,39 +284,8 @@ public class UserController extends HttpServlet {
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 
-	@PutMapping
-	public ResponseEntity<?> manageMem(@RequestBody UserDto dto) {
-		try {
-			if (userService.modifyUser(dto)) {
-				resultMessage.setResultSuccess();
-				return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.OK);
-			} else {
-				resultMessage.setResultFail();
-				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-			}
-		} catch (Exception e) {
-			return exceptionHandling(e);
-		}
-	}
 
-	@PutMapping("/{userId}")
-	public ResponseEntity<?> userWithdraw(@PathVariable String userId) {
-		try {
-			userService.userWithdraw(userId);
-			// TODO 알맞은 조건 써서 제대로 탈퇴상태로 바꼈는지 확인
-			// user role 이 0인지 확인 , 글중에 그 userid 가 있는지 확인
-			if (userService.checkUserWithdraw(userId)) {
-				resultMessage.setResultSuccess();
-				return new ResponseEntity<ResultMessage>(resultMessage, HttpStatus.OK);
-			} else {
-				resultMessage.setResultFail();
-				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-			}
-		} catch (Exception e) {
-			return exceptionHandling(e);
-		}
-	}
-
+	
 	private ResponseEntity<String> exceptionHandling(Exception e) {
 		e.printStackTrace();
 		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

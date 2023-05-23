@@ -26,5 +26,4 @@ public interface UserMapper {
 	int checkRole(String userId);
 	int countInfoAricle(String userId);
 	int countPlanAricle(String userId);
-	int updateJoinUser(UserDto userDto);
 }
