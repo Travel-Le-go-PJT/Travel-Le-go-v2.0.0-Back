@@ -181,4 +181,14 @@
 		b.trip_plan_article_no = f.trip_plan_article_no
 		order by trip_plan_article_no desc
 	</select>
+	
+	<select id="getBestPlans" resultMap="article">
+
+		select count(*) cnt, b.trip_plan_article_no, trip_plan_user_id, trip_plan_subject,
+		trip_plan_content, trip_plan_hit, trip_plan_register_time
+		from trip_plan_favorite f, trip_plan_board b
+        where f.trip_plan_article_no = b.trip_plan_article_no
+        group by trip_plan_article_no
+        order by cnt desc, trip_plan_hit desc limit 10;
+	</select>
 </mapper>
