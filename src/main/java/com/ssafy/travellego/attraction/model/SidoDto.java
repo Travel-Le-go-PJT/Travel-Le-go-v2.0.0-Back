@@ -5,6 +5,16 @@ public class SidoDto {
 	String sidoName;
 	String engName;
 	String image;
+	String description;
+	
+	public SidoDto(int sidoCode, String sidoName, String engName, String image, String description) {
+		super();
+		this.sidoCode = sidoCode;
+		this.sidoName = sidoName;
+		this.engName = engName;
+		this.image = image;
+		this.description = description;
+	}
 
 	public SidoDto(int sidoCode, String sidoName, String engName, String image) {
 		super();
@@ -54,6 +64,14 @@ public class SidoDto {
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	

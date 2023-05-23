@@ -19,6 +19,7 @@
 		<result column="sido_name" property="sidoName"/>
 		<result column="eng_name" property="engName"/>
 		<result column="image" property="image"/>
+		<result column="description" property="description"/>
 	</resultMap>
 	
 
@@ -34,13 +35,20 @@
 		select i.content_id, title, addr1, first_image, overview,  latitude, longitude
 		from attraction_info i, attraction_description d
 		where i.content_id = d.content_id
-		and i.sido_code= #{sidoCode} AND i.content_type_id=#{contentTypeId} AND i.title like concat('%',#{title},'%')
+		<if test="sidoCode != null">
+			and i.sido_code= #{sidoCode}
+			<if test="contentTypeId != 0">
+				and i.content_type_id = #{contentTypeId}
+			</if>
+		</if>
+		AND i.title like concat('%',#{title},'%')
 	</select>
 	
 	<select id="getSido"  resultMap="sido">
-		select sido_code, sido_name, eng_name, image
+		select sido_code, sido_name, eng_name, image, description
 		from sido;
 	</select>
+	
 	
 	<select id="getAttraction" parameterType="int" resultMap="attraction">
 		select i.content_id, title, addr1, first_image, overview, latitude, longitude
