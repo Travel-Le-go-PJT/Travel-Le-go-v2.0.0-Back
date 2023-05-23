@@ -123,11 +123,16 @@ public class UserController extends HttpServlet {
 	@PutMapping
 	public ResponseEntity<?> modifyUser(@RequestBody UserDto dto) {
 		Map<String, Object> resultMap = new HashMap<>();
-		dto.setUserPwd(encService.getEncryptedPw(dto.getUserPwd()));
-		HttpStatus status = HttpStatus.UNAUTHORIZED;
 		try {
+			UserDto userDto = userService.getUser(dto.getUserId());
+			logger.debug("원래 디비에 저장된 비번 : "+userDto.getUserPwd());
+			logger.debug("날라온 암호화 되기  비번 : "+dto.getUserPwd());
+			if(!userDto.getUserPwd().equals(dto.getUserPwd())) {
+				dto.setUserPwd(encService.getEncryptedPw(dto.getUserPwd()));
+			}
+			HttpStatus status = HttpStatus.UNAUTHORIZED;
 			if (userService.modifyUser(dto)) {
-				UserDto userDto = userService.getUser(dto.getUserId());
+				userDto = userService.getUser(dto.getUserId());
 				resultMap.put("userInfo", userDto);
 				resultMap.put("message", "SUCCESS");
 				status = HttpStatus.ACCEPTED;

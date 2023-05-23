@@ -58,6 +58,7 @@ public class UserServiceImpl implements UserService {
 		return userMapper.modifyUser(dto) == 1;
 	}
 
+
 	@Override
 	public void saveRefreshToken(String userId, String refreshToken) throws Exception {
 		Map<String, String> map = new HashMap<String, String>();
@@ -108,6 +109,8 @@ public class UserServiceImpl implements UserService {
 	public int getCount(String userId) {
 		return userMapper.countInfoAricle(userId) + userMapper.countPlanAricle(userId);
 	}
+
+
 
 
 
