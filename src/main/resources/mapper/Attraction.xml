@@ -19,6 +19,7 @@
 		<result column="sido_name" property="sidoName"/>
 		<result column="eng_name" property="engName"/>
 		<result column="image" property="image"/>
+		<result column="description" property="description"/>
 	</resultMap>
 	
 
@@ -38,9 +39,10 @@
 	</select>
 	
 	<select id="getSido"  resultMap="sido">
-		select sido_code, sido_name, eng_name, image
+		select sido_code, sido_name, eng_name, image, description
 		from sido;
 	</select>
+	
 	
 	<select id="getAttraction" parameterType="int" resultMap="attraction">
 		select i.content_id, title, addr1, first_image, overview, latitude, longitude
