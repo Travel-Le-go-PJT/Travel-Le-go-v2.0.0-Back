@@ -19,5 +19,6 @@ public interface UserService {
 	boolean iSDuplicate(String userId);
 	void userWithdraw(String userId);
 	boolean checkUserWithdraw(String userId);
+	int getCount(String userId);
 	
 }

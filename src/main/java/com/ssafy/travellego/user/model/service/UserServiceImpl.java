@@ -104,6 +104,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 
+	@Override
+	public int getCount(String userId) {
+		return userMapper.countInfoAricle(userId) + userMapper.countPlanAricle(userId);
+	}
+
+
 
 
 	
