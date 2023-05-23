@@ -256,6 +256,19 @@ public class UserController extends HttpServlet {
 			return exceptionHandling(e);
 		}
 	}
+	@GetMapping("/count/{userId}")
+	public ResponseEntity<?> getCount(@PathVariable String userId) {
+		try {
+			int count = userService.getCount(userId);
+			if (count >=0) {
+				return new ResponseEntity<Object>(count, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
 	@GetMapping
 	public ResponseEntity<?> manageMem() {
 		try {
