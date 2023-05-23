@@ -29,13 +29,7 @@ public class UserServiceImpl implements UserService {
 		//없다면 추가 insert
 		return userMapper.joinUser(userDto) == 1;
 	}
-	
-	@Override
-	public boolean updateJoinUser(UserDto userDto) {
-		return userMapper.updateJoinUser(userDto) == 1;
-	}
-	
-	
+
 	@Override
 	public boolean iSDuplicate(String userId) {
 		int cntresult = userMapper.iSDuplicate(userId);
@@ -108,6 +102,8 @@ public class UserServiceImpl implements UserService {
 		}
 		return false;
 	}
+
+
 
 
 	
