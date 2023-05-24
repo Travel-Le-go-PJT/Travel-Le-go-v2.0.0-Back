@@ -13,4 +13,5 @@ public interface AttractionMapper {
 	List<AttractionDto> attractionList(AttractionDto dto);
 	List<SidoDto> getSido();
 	AttractionDto getAttraction(int contentId);
+	List<AttractionDto> getBestAttractions();
 }

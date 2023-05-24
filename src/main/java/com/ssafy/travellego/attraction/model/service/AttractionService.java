@@ -10,4 +10,5 @@ public interface AttractionService {
 	List<AttractionDto> attractionList(AttractionDto dto) throws Exception;
 	List<SidoDto> getSido() throws Exception;
 	AttractionDto getAttraction(int contentId) throws Exception;
+	List<AttractionDto> getBestAttractions();
 }

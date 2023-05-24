@@ -42,4 +42,9 @@ public class AttractionServiceImpl implements AttractionService{
 		return attrMapper.getAttraction(contentId);
 	}
 
+	@Override
+	public List<AttractionDto> getBestAttractions() {
+		return attrMapper.getBestAttractions();
+	}
+
 }
