@@ -17,4 +17,5 @@ public interface TripInfoBoardMapper {
 	void updateHit(int articleNo) throws SQLException;
 	int modifyArticle(TripInfoBoardDto boardDto) throws SQLException;
 	int deleteArticle(int articleNo) throws SQLException;
+	List<TripInfoBoardDto> getBestInfos();
 }

@@ -14,5 +14,6 @@ public interface TripInfoBoardService {
 	int modifyArticle(TripInfoBoardDto boardDto) throws Exception;
 	int deleteArticle(int articleNo) throws Exception;
 //	List<TripInfoBoardDto> listArticleByPatternMatching(Map<String, String> map) throws Exception;
+	List<TripInfoBoardDto> getBestInfos();
 	
 }

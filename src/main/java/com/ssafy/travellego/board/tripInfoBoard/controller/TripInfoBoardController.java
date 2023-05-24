@@ -148,6 +148,23 @@ public class TripInfoBoardController {
 		}
 	}
 	
+	@GetMapping(value = "/best")
+	public ResponseEntity<?> getBestInfos() throws Exception {
+		logger.info("Welcome Trip Info Board List! ");
+		try {
+			List<TripInfoBoardDto> list = tripInfoBoardService.getBestInfos();
+			if (list != null && !list.isEmpty()) {
+				
+				return new ResponseEntity<List<TripInfoBoardDto>>(list, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
+
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
 	
 	
 	private ResponseEntity<String> exceptionHandling(Exception e) {
