@@ -28,6 +28,17 @@ public class AttractionDto {
 
 	
 	
+	
+
+	public AttractionDto(int contentId, String title, String addr1, String image) {
+		super();
+		this.contentId = contentId;
+		this.title = title;
+		this.addr1 = addr1;
+		this.image = image;
+	}
+
+
 
 	public AttractionDto(int contentId, String title, String addr1, String image,
 			String description, double latitude, double longitude) {

@@ -57,4 +57,13 @@
 		and i.content_id=#{contentId}
 	</select>
 	
+	<select id="getBestAttractions" resultMap="attraction">
+		select attraction_content_id, title, addr1, first_image
+		from trip_plan p, attraction_info i
+		where p.attraction_content_id = i.content_id
+		group by attraction_content_id
+		order by count(*) desc
+		limit 10;
+	</select>
+	
 </mapper>

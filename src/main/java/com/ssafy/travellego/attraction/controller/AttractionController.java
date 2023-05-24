@@ -96,6 +96,21 @@ public class AttractionController {
 		}
 	}
 	
+	@GetMapping("/best")
+	public ResponseEntity<?> getBestAttractions() {
+		List<AttractionDto> list;
+		try {
+			list = aservice.getBestAttractions();
+			if(list != null && !list.isEmpty()) {
+				return new ResponseEntity<List<AttractionDto>>(list, HttpStatus.OK);
+			}else {
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
 	private ResponseEntity<String> exceptionHandling(Exception e) {
 		e.printStackTrace();
 		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
