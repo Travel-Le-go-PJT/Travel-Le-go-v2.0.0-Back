@@ -234,6 +234,23 @@ public class TripPlanBoardController {
 		}
 	}
 	
+	@GetMapping(value = "/best")
+	public ResponseEntity<?> getBestPlans() throws Exception {
+		logger.debug("Welcome Hot Place Board List!:{} ");
+		try {
+			List<TripPlanBoardDto> list = tripPlanBoardService.getBestPlans();
+			if (list != null && !list.isEmpty()) {
+				
+				return new ResponseEntity<List<TripPlanBoardDto>>(list, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
+
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
 	private ResponseEntity<String> exceptionHandling(Exception e) {
 		e.printStackTrace();
 		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

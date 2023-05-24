@@ -125,6 +125,11 @@ public class TripPlanBoardServiceImpl implements TripPlanBoardService {
 	public List<TripPlanBoardDto> getFavoriteArticles(String userId) {
 		return planMapper.getFavoriteArticles(userId);
 	}
+
+	@Override
+	public List<TripPlanBoardDto> getBestPlans() {
+		return planMapper.getBestPlans();
+	}
 	
 
 }
