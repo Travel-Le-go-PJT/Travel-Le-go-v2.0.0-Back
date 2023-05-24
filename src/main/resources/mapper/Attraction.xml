@@ -58,9 +58,10 @@
 	</select>
 	
 	<select id="getBestAttractions" resultMap="attraction">
-		select content_id, title, addr1, first_image
-		from trip_plan p, attraction_info i
-		where p.attraction_content_id = i.content_id
+		select i.content_id, title, addr1, first_image, overview
+		from trip_plan p, attraction_info i, attraction_description d
+		where p.attraction_content_id = i.content_id and
+		i.content_id = d.content_id
 		group by attraction_content_id
 		order by count(*) desc
 		limit 10;

@@ -37,6 +37,19 @@ public class AttractionDto {
 		this.addr1 = addr1;
 		this.image = image;
 	}
+	
+	
+
+
+
+	public AttractionDto(int contentId, String title, String addr1, String image, String description) {
+		super();
+		this.contentId = contentId;
+		this.title = title;
+		this.addr1 = addr1;
+		this.image = image;
+		this.description = description;
+	}
 
 
 
