@@ -79,5 +79,13 @@
 		where
 		trip_info_article_no = #{articleNo}
 	</delete>
+	
+	<select id="getBestInfos" resultMap="article">
+
+		select trip_info_article_no, trip_info_user_id, trip_info_subject,
+		trip_info_content, trip_info_hit, trip_info_register_time
+		from trip_info_board
+        order by trip_info_hit desc limit 10;
+	</select>
 
 </mapper>

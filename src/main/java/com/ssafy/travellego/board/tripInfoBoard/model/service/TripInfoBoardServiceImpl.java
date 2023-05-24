@@ -65,6 +65,12 @@ public class TripInfoBoardServiceImpl implements TripInfoBoardService {
 	}
 
 
+	@Override
+	public List<TripInfoBoardDto> getBestInfos() {
+		return tripInfoBoardMapper.getBestInfos();
+	}
+
+
 //	@Override
 //	public List<TripInfoBoardDto> listArticleByPatternMatching(Map<String, String> map) throws Exception {
 //		String key = map.get("key");
