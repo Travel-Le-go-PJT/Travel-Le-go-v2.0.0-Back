@@ -2,6 +2,8 @@ package com.ssafy.travellego.attraction.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,11 +13,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.travellego.attraction.model.AttractionDto;
 import com.ssafy.travellego.attraction.model.SidoDto;
 import com.ssafy.travellego.attraction.model.service.AttractionService;
+import com.ssafy.travellego.board.tripInfoBoard.controller.TripInfoBoardController;
 
 import io.swagger.annotations.Api;
 
@@ -24,7 +28,7 @@ import io.swagger.annotations.Api;
 @CrossOrigin("*")
 @Api("attraction Controller V1")
 public class AttractionController {
-	
+	private static final Logger logger = LoggerFactory.getLogger(AttractionController.class);
 	private AttractionService aservice;
 	
 	@Autowired
@@ -103,6 +107,22 @@ public class AttractionController {
 			list = aservice.getBestAttractions();
 			if(list != null && !list.isEmpty()) {
 				return new ResponseEntity<List<AttractionDto>>(list, HttpStatus.OK);
+			}else {
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
+	@GetMapping("/sido/search")
+	public ResponseEntity<?> getSearchedSido(@RequestParam String keyword) {
+		List<SidoDto> list;
+			logger.debug("view articleNo : {}", keyword);
+		try {
+			list = aservice.searchSido(keyword);
+			if(list != null && !list.isEmpty()) {
+				return new ResponseEntity<List<SidoDto>>(list, HttpStatus.OK);
 			}else {
 				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 			}

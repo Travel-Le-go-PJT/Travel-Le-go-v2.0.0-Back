@@ -47,4 +47,9 @@ public class AttractionServiceImpl implements AttractionService{
 		return attrMapper.getBestAttractions();
 	}
 
+	@Override
+	public List<SidoDto> searchSido(String keyword) {
+		return attrMapper.searchSido(keyword);
+	}
+
 }
