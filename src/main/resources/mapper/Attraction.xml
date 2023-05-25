@@ -67,4 +67,14 @@
 		limit 10;
 	</select>
 	
+	<select id="searchSido" parameterType="String"  resultMap="sido">
+		select sido_code, sido_name, eng_name, image, description
+		from sido
+		where sido_name like concat('%',#{keyword},'%')
+		union
+		select distinct(s.sido_code), sido_name, eng_name, image, description
+		from sido s, attraction_info i 
+		where s.sido_code = i.sido_code and
+		title like concat('%',#{keyword},'%');
+	</select>
 </mapper>

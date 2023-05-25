@@ -130,6 +130,11 @@ public class TripPlanBoardServiceImpl implements TripPlanBoardService {
 	public List<TripPlanBoardDto> getBestPlans() {
 		return planMapper.getBestPlans();
 	}
+
+	@Override
+	public List<TripPlanBoardDto> searchPlans(String keyword) {
+		return planMapper.searchPlans(keyword);
+	}
 	
 
 }

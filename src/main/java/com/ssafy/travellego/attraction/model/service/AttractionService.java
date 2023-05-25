@@ -11,4 +11,5 @@ public interface AttractionService {
 	List<SidoDto> getSido() throws Exception;
 	AttractionDto getAttraction(int contentId) throws Exception;
 	List<AttractionDto> getBestAttractions();
+	List<SidoDto> searchSido(String keyword);
 }
