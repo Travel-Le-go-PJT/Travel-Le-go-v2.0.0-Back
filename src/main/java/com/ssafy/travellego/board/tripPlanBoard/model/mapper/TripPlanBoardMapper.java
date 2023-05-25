@@ -30,4 +30,5 @@ public interface TripPlanBoardMapper {
 	int getFavoriteCount(int articleNo);
 	List<TripPlanBoardDto> getFavoriteArticles(String userId);
 	List<TripPlanBoardDto> getBestPlans();
+	List<TripPlanBoardDto> searchPlans(String keyword);
 }

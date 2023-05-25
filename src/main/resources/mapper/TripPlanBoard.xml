@@ -191,4 +191,18 @@
         group by trip_plan_article_no
         order by count(*) desc, trip_plan_hit desc limit 10;
 	</select>
+	
+	<select id="searchPlans" parameterType="String" resultMap="article">
+		select distinct(b.trip_plan_article_no), trip_plan_user_id, trip_plan_subject,
+			trip_plan_content,
+			trip_plan_hit, trip_plan_register_time
+		from trip_plan_board b, trip_plan p
+		where b.trip_plan_article_no = p.trip_plan_article_no
+		and p.attraction_content_id in (
+				select content_id
+				from attraction_info 
+				where title like concat('%',#{keyword},'%'))
+		order by trip_plan_article_no desc;
+	
+	</select>
 </mapper>

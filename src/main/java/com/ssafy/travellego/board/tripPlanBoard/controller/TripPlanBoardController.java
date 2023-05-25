@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.travellego.attraction.model.SidoDto;
 import com.ssafy.travellego.board.favorite.model.FavoriteDto;
 import com.ssafy.travellego.board.search.SearchDto;
 import com.ssafy.travellego.board.tripPlanBoard.model.TripPlanBoardDto;
@@ -246,6 +247,22 @@ public class TripPlanBoardController {
 				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 			}
 
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
+	@GetMapping("/search")
+	public ResponseEntity<?> getSearchedPlans(@RequestParam String keyword) {
+		List<TripPlanBoardDto> list;
+		logger.debug("view articleNo : {}", keyword);
+		try {
+			list = tripPlanBoardService.searchPlans(keyword);
+			if(list != null && !list.isEmpty()) {
+				return new ResponseEntity<List<TripPlanBoardDto>>(list, HttpStatus.OK);
+			}else {
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}
