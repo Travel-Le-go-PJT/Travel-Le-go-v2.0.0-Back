@@ -103,6 +103,8 @@ public class UserController extends HttpServlet {
 			try {
 //				로그인 사용자 정보.
 				UserDto userDto = userService.getUser(userId);
+				logger.debug("getInfo - userId : {} ", userId);
+				logger.debug("getInfo - userId : {} ", userDto);
 				resultMap.put("userInfo", userDto);
 				resultMap.put("message", "SUCCESS");
 				status = HttpStatus.ACCEPTED;
@@ -172,7 +174,7 @@ public class UserController extends HttpServlet {
 		logger.debug("token : {}, userDto : {}", token, userDto);
 		if (jwtService.checkToken(token)) {
 			if (token.equals(userService.getRefreshToken(userDto.getUserId()))) {
-				String accessToken = jwtService.createAccessToken("userid", userDto.getUserId());
+				String accessToken = jwtService.createAccessToken("userId", userDto.getUserId());
 				logger.debug("token : {}", accessToken);
 				logger.debug("정상적으로 액세스토큰 재발급!!!");
 				resultMap.put("access-token", accessToken);
