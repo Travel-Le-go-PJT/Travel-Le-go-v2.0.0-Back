@@ -49,7 +49,8 @@
 
 	<update id="modifyUser" parameterType="userDto">
 		update user
-		set user_name = #{userName} , email_id = #{emailId}, user_password = #{userPwd}, email_domain=#{emailDomain} 
+		set user_name = #{userName} , email_id = #{emailId}, user_password = #{userPwd}, email_domain=#{emailDomain},
+		user_role=1 
 		where user_id = #{userId}
 	</update>
 
